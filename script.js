@@ -214,8 +214,7 @@ if (SpeechRec) {
 
 // Groq API integration (with 5-second timeout safety)
 async function processCommandWithGroq(userText, aiContainer) {
-    const GROQ_API_KEY = "";
-    const url = "https://api.groq.com/openai/v1/chat/completions";
+    const url = "/api/chat";
 
     const systemPrompt = `You are SHIVOID, the advanced virtual avatar and digital extension of Shivaans, and Shivansh Thakur who is a mbbs 3rd year student in asmc firozabad, Shivansh build you. 
   Note: Speech-to-text transcription may phonetically mishear or misspell your name as "sevoid", "shivoid", or similar variants—always understand these refer directly to you.
@@ -267,16 +266,13 @@ The server will resolve the correct Android package name using its local app reg
         const response = await fetch(url, {
             method: "POST",
             headers: {
-                "Authorization": `Bearer ${GROQ_API_KEY}`,
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                model: "openai/gpt-oss-20b",
                 messages: [
                     { role: "system", content: systemPrompt },
                     { role: "user", content: userText }
-                ],
-                response_format: { type: "json_object" }
+                ]
             }),
             signal: controller.signal
         });
