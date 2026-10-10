@@ -331,34 +331,25 @@ function speakResponse(text) {
 }
 
 
-function speakResponseAndWait(text) {
-    return new Promise((resolve) => {
-        if (!window.speechSynthesis) {
-            resolve();
-            return;
-        }
 
-        window.speechSynthesis.cancel();
+async function speakResponseAndWait(text) {
+    const shivoid = window.Shivoid || window.shivoid;
 
-        const utterance = new SpeechSynthesisUtterance(
-            cleanTextForSpeech(text)
-        );
+    if (!shivoid?.tts?.speak) {
+        console.warn("SHI.VOID TTS bridge unavailable.");
+        return;
+    }
 
-        utterance.rate = 1.0;
-        utterance.pitch = 1.0;
-
-        const voices = window.speechSynthesis.getVoices();
-
-        if (voices.length > 0) {
-            utterance.voice = voices[1] || voices[0];
-        }
-
-        utterance.onend = resolve;
-        utterance.onerror = resolve;
-
-        window.speechSynthesis.speak(utterance);
-    });
+    try {
+        await shivoid.tts.speak(cleanTextForSpeech(text), {
+            pitch: 0.1,
+            rate: 1.5
+        });
+    } catch (error) {
+        console.error("SHI.VOID speech failed:", error);
+    }
 }
+
 
 
 // Helper to clean up long URLs and fix pronunciation
