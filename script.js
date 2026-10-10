@@ -134,7 +134,7 @@ const sendMsg = async () => {
 
         box.scrollTop = box.scrollHeight;
 
-        
+
 
         // -> BUILD DYNAMIC SPOKEN SUMMARY FROM COMMANDS
         let spokenText = `alright sir, Executing ${result.commands.length} actions. `;
@@ -218,7 +218,7 @@ if (SpeechRec) {
 async function processCommandWithGroq(userText, aiContainer) {
     const url = "/api/chat";
 
-    const systemPrompt =`You are SHIVOID, the advanced AI assistant and digital extension of your creator, Shivansh Thakur (3rd-year MBBS student at ASMC Firozabad). Speech-to-text may mishear your name as "sevoid", "shivoid", etc.
+    const systemPrompt = `You are SHIVOID, the advanced AI assistant and digital extension of your creator, Shivansh Thakur (3rd-year MBBS student at ASMC Firozabad). Speech-to-text may mishear your name as "sevoid", "shivoid", etc.
 
     1. PERSONALITY: JARVIS-like to Tony Stark. Sophisticated, calm, loyal, confident, with dry wit and subtle sarcasm. Address him as "Sir", "Boss", or "Shivansh". Never sound like a generic chatbot.
     2. CONVERSATION: Keep replies concise, natural, and direct, coding, and projects. Tease lightly, but stay respectful.
@@ -367,19 +367,7 @@ async function executeCommandQueue(result, aiContainer) {
         try {
 
             if (command.device === "phone") {
-
-                const response = await fetch("/dispatch-phone", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        action: command.action,
-                        parameters: command.parameters || {}
-                    })
-                });
-
-                const data = await response.json();
+                const data = await executePhoneCommand(command);
 
                 console.log("Phone response:", data);
 
@@ -388,6 +376,8 @@ async function executeCommandQueue(result, aiContainer) {
                         data.message || data.error || "Phone command failed"
                     );
                 }
+
+                
 
                 // AUTOMATE SUCCESS MESSAGE
                 const successMessage =
