@@ -33,8 +33,7 @@ const sendMsg = async () => {
         if (result.type === "chat") {
             aiContainer.innerHTML = `<p style="color: #00ffcc;">${result.response}</p>`;
             box.scrollTop = box.scrollHeight;
-            window.Shivoid.tts.speak(result.response, {pitch: 0.1, rate: 1.5});
-            window.Shivoid.vibrate(200);
+            speakResponse(result.response);
             return;
         }
 
