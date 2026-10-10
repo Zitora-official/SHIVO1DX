@@ -134,8 +134,7 @@ const sendMsg = async () => {
 
         box.scrollTop = box.scrollHeight;
 
-        // NOW EXECUTE THE COMMANDS
-        await executeCommandQueue(result, aiContainer);
+        
 
         // -> BUILD DYNAMIC SPOKEN SUMMARY FROM COMMANDS
         let spokenText = `alright sir, Executing ${result.commands.length} actions. `;
@@ -159,6 +158,9 @@ const sendMsg = async () => {
 
         speakResponse(spokenText);
 
+
+        // NOW EXECUTE THE COMMANDS
+        await executeCommandQueue(result, aiContainer);
 
     }
 };
