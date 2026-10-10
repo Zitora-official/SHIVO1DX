@@ -1,27 +1,13 @@
 
-async function executePhoneCommand(command) {
-    if (!window.Shivoid?.http?.automate) {
-        throw new Error("SHI.VOID Automate bridge is unavailable.");
+async function testAutomateBridge() {
+    try {
+        const result = await window.Shivoid.http.automate(
+            "http://127.0.0.1:8080/task",
+            { cmd: "test" }
+        );
+
+        console.log("Automate test result:", result);
+    } catch (error) {
+        console.error("Automate bridge error:", error);
     }
-
-    const endpoints = {
-        open_app: "http://127.0.0.1:8001/open_app"
-    };
-
-    const endpoint = endpoints[command.action];
-
-    if (!endpoint) {
-        throw new Error("Unsupported phone action: " + command.action);
-    }
-
-    const response = await window.Shivoid.http.automate(
-        endpoint,
-        {
-            action: command.action,
-            parameters: command.parameters || {}
-        }
-    );
-
-    console.log("Automate response:", response);
-    return response;
 }
