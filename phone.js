@@ -9,7 +9,7 @@ async function executePhoneCommand(command) {
         throw new Error("Unsupported phone action: " + command.action);
     }
 
-    return await window.Shivoid.http.post(endpoint, {
+    return await window.Shivoid.http.automate(endpoint, {
         action: command.action,
         parameters: command.parameters || {}
     });
