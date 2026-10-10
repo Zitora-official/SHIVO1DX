@@ -248,6 +248,7 @@ async function processCommandWithGroq(userText, aiContainer) {
   
   For open_app commands, ALWAYS return the human-readable app name in parameters.app_name.
 NEVER generate or search for Android package names.
+and get the correct app name from typos in user enquiry...
 Example:
 {
   "action": "open_app",
