@@ -317,36 +317,19 @@ The server will resolve the correct Android package name using its local app reg
     }
 }
 
-// shivoid-voice
+// SHI.VOID app TTS bridge — no browser speech synthesis
 function speakResponse(text) {
-    if (!window.speechSynthesis) return;
+    const shivoid = window.Shivoid || window.shivoid;
 
-    window.speechSynthesis.cancel();
-
-    const speechReadyText = cleanTextForSpeech(text);
-    const utterance = new SpeechSynthesisUtterance(speechReadyText);
-    utterance.rate = 1.0;
-    utterance.pitch = 1.0; // Deep cyberpunk pitch
-
-    let voices = window.speechSynthesis.getVoices();
-
-    if (voices.length > 0) {
-        const chosenIndex = voices[1] ? 1 : 0;
-        utterance.voice = voices[chosenIndex];
-        console.log("Using voice:", voices[chosenIndex].name);
-    } else {
-        console.log("Voices list still loading or restricted by mobile browser.");
+    if (!shivoid?.tts?.speak) {
+        console.warn("SHI.VOID app TTS bridge unavailable.");
+        return;
     }
 
-    window.speechSynthesis.speak(utterance);
-}
-
-// Ensure voices are fetched when ready
-if (window.speechSynthesis) {
-    window.speechSynthesis.onvoiceschanged = () => {
-        const voices = window.speechSynthesis.getVoices();
-        console.log("Loaded voices:", voices.length);
-    };
+    shivoid.tts.speak(cleanTextForSpeech(text), {
+        pitch: 0.1,
+        rate: 1.5
+    });
 }
 
 // Helper to clean up long URLs and fix pronunciation
