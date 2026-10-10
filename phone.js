@@ -21,11 +21,6 @@ async function getAppPackages() {
     return appPackagesCache;
 }
 
-
-
-
-
-
 async function executePhoneCommand(command) {
     const shivoid = window.Shivoid || window.shivoid;
 
@@ -38,11 +33,38 @@ async function executePhoneCommand(command) {
     }
 
     // Dedicated execution endpoint for opening apps.
-    if (command.action === "open_app") {
-        const appName = command.parameters?.app_name;
 
-        if (!appName || typeof appName !== "string") {
-            throw new Error("Missing app_name for open_app command.");
+    if (command.action === "open_app") {
+        const appName = command.parameters?.app_name?.trim();
+
+        if (!appName) {
+            throw new Error("Missing app_name for open_app.");
+        }
+
+        const apps = await getAppPackages();
+
+        // Match app names without worrying about capitalization.
+        const match = Object.entries(apps).find(
+            ([name]) => name.toLowerCase() === appName.toLowerCase()
+        );
+
+        if (!match) {
+            throw new Error(
+                `App '${appName}' was not found in appPkg.json.`
+            );
+        }
+
+        const packageName = match[1];
+
+        // Refuse incomplete package names.
+        if (
+            typeof packageName !== "string" ||
+            !packageName.trim() ||
+            packageName.includes("...")
+        ) {
+            throw new Error(
+                `Package name for '${appName}' is missing or incomplete in appPkg.json.`
+            );
         }
 
         const result = await shivoid.http.automate(
@@ -52,7 +74,8 @@ async function executePhoneCommand(command) {
                 device: "phone",
                 action: "open_app",
                 parameters: {
-                    app_name: appName
+                    app_name: appName,
+                    package_name: packageName
                 }
             }
         );
@@ -67,6 +90,7 @@ async function executePhoneCommand(command) {
 
         return result;
     }
+
 
     // Other actions remain unimplemented here for now.
     throw new Error(
