@@ -91,6 +91,44 @@ async function executePhoneCommand(command) {
         return result;
     }
 
+    //VOLUME VOLUME VOLUME
+
+    if (command.action === "set_volume") {
+        const volume = command.parameters?.volume_percent;
+
+        if (
+            typeof volume !== "number" ||
+            !Number.isFinite(volume) ||
+            volume < 0 ||
+            volume > 100
+        ) {
+            throw new Error("Volume must be a number from 0 to 100.");
+        }
+
+        const result = await shivoid.http.automate(
+            "http://127.0.0.1:8002/set_volume",
+            {
+                id: command.id,
+                device: "phone",
+                action: "set_volume",
+                parameters: {
+                    volume_percent: volume
+                }
+            }
+        );
+
+        if (result?.status !== "success") {
+            throw new Error(
+                result?.message ||
+                result?.error ||
+                "Failed to change phone volume."
+            );
+        }
+
+        return result;
+    }
+
+
 
     // Other actions remain unimplemented here for now.
     throw new Error(
