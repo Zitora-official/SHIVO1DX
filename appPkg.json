@@ -98,5 +98,6 @@
     "vlc": "org.videolan.vlc",
     "zarchiver": "ru.zdevs.zarchiver",
     "music": "com.kapp.youtube.final",
-    "camera": "com.sec.android.app.camera"
+    "camera": "com.sec.android.app.camera",
+    "gemini": "com.google.android.apps.bard.shellapp.BardEntryPointActivity"
   }
