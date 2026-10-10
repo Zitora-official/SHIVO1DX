@@ -1,5 +1,9 @@
 
 async function executePhoneCommand(command) {
+    if (!window.Shivoid?.http?.post) {
+        throw new Error("SHI.VOID Android HTTP bridge is unavailable.");
+    }
+
     const response = await window.Shivoid.http.post(
         "YOUR_AUTOMATE_HTTP_ENDPOINT",
         {
@@ -8,5 +12,6 @@ async function executePhoneCommand(command) {
         }
     );
 
+    console.log("Automate response:", response);
     return response;
 }
