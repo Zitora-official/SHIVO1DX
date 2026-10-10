@@ -465,8 +465,11 @@ async function executeCommandQueue(result, aiContainer) {
             // SPEAK ACTUAL FAILURE
             speakResponse(`Command failed. ${failureMessage}`);
 
-            // Continue with remaining commands
-            continue;
+            // Wait 1 second before the next command
+            if (index < result.commands.length - 1) {
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+
         }
     }
 }
