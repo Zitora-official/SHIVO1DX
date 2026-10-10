@@ -331,6 +331,37 @@ function speakResponse(text) {
     });
 }
 
+
+function speakResponseAndWait(text) {
+    return new Promise((resolve) => {
+        if (!window.speechSynthesis) {
+            resolve();
+            return;
+        }
+
+        window.speechSynthesis.cancel();
+
+        const utterance = new SpeechSynthesisUtterance(
+            cleanTextForSpeech(text)
+        );
+
+        utterance.rate = 1.0;
+        utterance.pitch = 1.0;
+
+        const voices = window.speechSynthesis.getVoices();
+
+        if (voices.length > 0) {
+            utterance.voice = voices[1] || voices[0];
+        }
+
+        utterance.onend = resolve;
+        utterance.onerror = resolve;
+
+        window.speechSynthesis.speak(utterance);
+    });
+}
+
+
 // Helper to clean up long URLs and fix pronunciation
 function cleanTextForSpeech(text) {
     let cleaned = text.replace(/https?:\/\/[^\s]+/g, "the requested link");
@@ -377,7 +408,7 @@ async function executeCommandQueue(result, aiContainer) {
                     );
                 }
 
-                
+
 
                 // AUTOMATE SUCCESS MESSAGE
                 const successMessage =
