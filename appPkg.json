@@ -97,6 +97,6 @@
     "telegram": "org.telegram.messenger",
     "vlc": "org.videolan.vlc",
     "zarchiver": "ru.zdevs.zarchiver",
-    "ymusic": "com.kapp.youtube.final",
+    "music": "com.kapp.youtube.final",
     "camera": "com.sec.android.app.camera"
   }
