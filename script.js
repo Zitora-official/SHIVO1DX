@@ -137,29 +137,28 @@ const sendMsg = async () => {
 
 
         // -> BUILD DYNAMIC SPOKEN SUMMARY FROM COMMANDS
-        let spokenText = `alright sir, Executing ${result.commands.length} actions. `;
+
+        let spokenText = `Alright sir, executing ${result.commands.length} ${result.commands.length === 1 ? "command" : "commands"
+            }. `;
+
         result.commands.forEach((cmd) => {
-            let targetDevice = cmd.device || "phone";
+            const params = cmd.parameters || {};
 
-            // Check all possible parameters dynamically so nothing gets left behind
-            let details = Object.values(cmd.parameters).join(' ');
-
-            // CLEAN THE DETAILS HERE SO URLs DON'T GET READ OUT LOUD
-            let cleanDetails = cleanTextForSpeech(details);
-
-            if (cmd.action === "open_url") {
-                spokenText += `Opening ${cleanDetails} on ${targetDevice}. `;
+            if (cmd.action === "open_app") {
+                spokenText += `Opening ${params.app_name || "the requested app"}, sir. `;
             } else if (cmd.action === "search") {
-                spokenText += `Searching for ${cleanDetails} on ${targetDevice}. `;
+                spokenText += `Searching for ${Object.values(params).join(" ")
+                    }, sir. `;
+            } else if (cmd.action === "open_url") {
+                spokenText += `Opening the requested link, sir. `;
             } else {
-                spokenText += `Performing ${cmd.action} with ${cleanDetails} on ${targetDevice}. `;
+                spokenText += `Performing ${cmd.action.replace(/_/g, " ")}, sir. `;
             }
         });
 
-        speakResponse(spokenText);
+        await speakResponseAndWait(spokenText);
 
-
-        // NOW EXECUTE THE COMMANDS
+        // Execute only after the announcement finishes.
         await executeCommandQueue(result, aiContainer);
 
     }
@@ -411,8 +410,25 @@ async function executeCommandQueue(result, aiContainer) {
 
 
                 // AUTOMATE SUCCESS MESSAGE
+
+                const successMessages = [
+                    "Done, boss.",
+                    "All done, sir. Anything else?",
+                    "Consider it handled, boss.",
+                    "Done and dusted, sir.",
+                    "Right away, boss. All taken care of.",
+                    "Task completed, sir.",
+                    "There you go, boss. All sorted.",
+                    "As you wish, sir. Done.",
+                    "Handled, boss. What's next?",
+                    "All set, sir. Ready for your next command."
+                ];
+
                 const successMessage =
-                    data.message || "Command executed successfully.";
+                    successMessages[
+                    Math.floor(Math.random() * successMessages.length)
+                    ];
+
 
                 aiContainer.insertAdjacentHTML('beforeend', `
                         <p class="status-log" style="color: #00ff66;">
