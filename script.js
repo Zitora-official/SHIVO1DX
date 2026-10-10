@@ -430,7 +430,7 @@ async function executeCommandQueue(result, aiContainer) {
                 box.scrollTop = box.scrollHeight;
 
                 // SPEAK ACTUAL AUTOMATE RESULT
-                speakResponse(successMessage);
+                await speakResponseAndWait(successMessage);
 
             } else {
 
