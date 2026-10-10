@@ -1,4 +1,31 @@
 
+let appPackagesCache = null;
+
+async function getAppPackages() {
+    if (!appPackagesCache) {
+        appPackagesCache = fetch("./appPkg.json")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(
+                        `Failed to load appPkg.json: ${response.status}`
+                    );
+                }
+                return response.json();
+            })
+            .catch(error => {
+                appPackagesCache = null;
+                throw error;
+            });
+    }
+
+    return appPackagesCache;
+}
+
+
+
+
+
+
 async function executePhoneCommand(command) {
     const shivoid = window.Shivoid || window.shivoid;
 
