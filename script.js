@@ -330,8 +330,8 @@ function speakResponse(text) {
     }
 
     shivoid.tts.speak(cleanTextForSpeech(text), {
-        pitch: 0.1,
-        rate: 1.5
+        pitch: 0.3,
+        rate: 1.2
     });
 }
 
